@@ -3,3 +3,4 @@
 
 ## Progress
 * Set up repository
+* Added Inventory Component System with HUD and windows
