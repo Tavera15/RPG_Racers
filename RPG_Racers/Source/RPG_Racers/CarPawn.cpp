@@ -2,21 +2,26 @@
 
 #include "CarPawn.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Runtime/Engine/Public/DrawDebugHelpers.h"
 
 // Sets default values
 ACarPawn::ACarPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	PlayerStats = CreateDefaultSubobject<UPlayerStats_AC>(FName("PlayerStats"));
+	CarMovementComp = CreateDefaultSubobject<UCarMovementComponent>(FName("CarMovementComp"));
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(FName("InventoryComponent"));
-
 }
 
 // Called when the game starts or when spawned
 void ACarPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	InventoryComponent->AddToWindow();
+	
+	if(!isNPC)
+		InventoryComponent->AddToWindow();
 	
 	TArray<AActor*> AllStores;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStore_A::StaticClass(), AllStores);
@@ -24,30 +29,40 @@ void ACarPawn::BeginPlay()
 	if(AllStores.Num() > 0)
 		TheStore = Cast<AStore_A>(AllStores[0]);
 
+	TArray<AActor*> AllCheckpoints;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckpoint_A::StaticClass(), AllCheckpoints);
+
+	for (int i = 0; i < AllCheckpoints.Num(); i++)
+		checkpoints.Add(Cast<ACheckpoint_A>(AllCheckpoints[i]));
+
+	faceDestination = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), checkpoints[CheckpointToGo]->GetActorLocation());
+
 }
 
 // Called every frame
 void ACarPawn::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
+	Super::Tick(DeltaTime);	
 }
 
 // Called to bind functionality to input
 void ACarPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	//PlayerInputComponent->BindAxis("MoveForward", this, &ACarPawn::MoveForward);
-	//PlayerInputComponent->BindAxis("MoveRight", this, &ACarPawn::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ACarPawn::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ACarPawn::MoveRight);
 	PlayerInputComponent->BindAction("OpenStore", IE_Pressed, this, &ACarPawn::OpenStore);
+	PlayerInputComponent->BindAction("UseWeapon", IE_Pressed, this, &ACarPawn::UseWeapon);
 }
 
 void ACarPawn::OpenStore()
 {
-	if (!TheStore) { return; }
+	if (isNPC || !TheStore) { return; }
 
 	auto StoreInvComp = TheStore->FindComponentByClass<UInventoryComponent>();
-	auto MyPlayerController = GetWorld()->GetFirstPlayerController();
+	auto MyPlayerController = Cast<APlayerController>(GetController());
+
+	if (!MyPlayerController || !StoreInvComp) { return; }
 
 	if (StoreInvComp->InventoryWindow && StoreInvComp->InventoryWindow->IsInViewport())
 	{
@@ -60,4 +75,45 @@ void ACarPawn::OpenStore()
 	StoreInvComp->AddToWindow();
 	MyPlayerController->bShowMouseCursor = true;
 	MyPlayerController->SetInputMode(FInputModeGameAndUI::FInputModeGameAndUI());
+}
+
+void ACarPawn::UseWeapon()
+{
+	if (!OffensiveWeapon) { return; }
+
+	OffensiveWeapon->ActivateWeapon(PlayerStats);
+}
+
+void ACarPawn::MoveForward(float value)
+{
+	if (!CarMovementComp) { return; }
+
+	CarMovementComp->SetThrottle(value);
+}
+
+void ACarPawn::MoveRight(float value)
+{
+	if (!CarMovementComp) { return; }
+
+	CarMovementComp->SetSteeringThrow(value);
+}
+
+void ACarPawn::DriveToDestination()
+{
+	if (checkpoints.Num() == 0) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Checkpoints empty"));
+		return; 
+	}
+	
+	ACheckpoint_A* currentCheckpoint = checkpoints[CheckpointToGo];
+	
+	this->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), currentCheckpoint->GetActorLocation()));
+	this->MoveForward(1);
+
+	if (IsOverlappingActor(currentCheckpoint))
+	{
+		CarMovementComp->Velocity = FVector::ZeroVector;
+		CheckpointToGo = (CheckpointToGo + 1 == checkpoints.Num() ? 0 : CheckpointToGo += 1);
+	}
 }

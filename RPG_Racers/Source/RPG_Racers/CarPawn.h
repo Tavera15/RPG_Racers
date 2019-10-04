@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Item_A.h"
+#include "PlayerStats_AC.h"
+#include "OffensiveWeapon_Item_A.h"
 #include "InventoryComponent.h"
 #include "CarMovementComponent.h"
+#include "Checkpoint_A.h"
 #include "Store_A.h"
 #include "CarPawn.generated.h"
 
@@ -24,27 +26,42 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UPlayerStats_AC* PlayerStats = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float HP = 100.0f;
+		AOffensiveWeapon_Item_A* OffensiveWeapon = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		AItem_A* OffensiveWeapon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UInventoryComponent* InventoryComponent;
+		UInventoryComponent* InventoryComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AStore_A* TheStore = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCarMovementComponent* CarMovementComp = nullptr;
+
+	UPROPERTY(EditAnywhere)
+		bool isNPC = false;
+
+	UFUNCTION(BlueprintCallable)
+		void MoveForward(float Value);
+
+	UFUNCTION(BlueprintCallable)
+		void MoveRight(float Value);
+
+	void DriveToDestination();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-private:	
-	//void MoveForward(float Value);
-	//void MoveRight(float Value);
+private:
+	TArray<ACheckpoint_A*> checkpoints;
+	int CheckpointToGo = 0;
 	void OpenStore();
-
+	void UseWeapon();
+	FRotator faceDestination;
 };
  

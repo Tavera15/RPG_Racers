@@ -44,22 +44,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		FVector2D WindowPosition;
 
-	// --------Functions that can be called in blueprints
+	// --------Functions that can be called in blueprints to add to or remove from inventory
 
 	UFUNCTION(BlueprintCallable)
-		bool CanAddToInventory(AItem_A* NewItem);
+		void AddItemToInventory(AStat_Item_A* ItemToAdd);
 
 	UFUNCTION(BlueprintCallable)
-		void AddToWindow();
-		
-	UFUNCTION(BlueprintCallable)
-		FSlotStruct GetEmptySlot();
+		void RemoveItemFromInventory(int index);
+
+	void AddToWindow();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-private:	
+private:
+
+	// Initialize the inventory with "Empty" Slots and keep any items that were placed before hitting play.
 	void PrepareInventory();
-		
+	void RemoveStatsFromPlayer(AStat_Item_A*);
+	void AddStatsToPlayer(AStat_Item_A*);
+	bool CanAddToInventory(AStat_Item_A* NewItem);
+	FSlotStruct GetEmptySlot();
 };

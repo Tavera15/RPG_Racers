@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/UserDefinedStruct.h"
-#include "Item_A.h"
+#include "Stat_Item_A.h"
 #include "ItemStruct.h"
 #include "SlotStruct.generated.h"
 
@@ -19,16 +19,14 @@ struct FSlotStruct
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		AItem_A* Item;
+		AStat_Item_A* Item;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FColor Color;
 
 	FSlotStruct()
 	{
-		auto EmptyItemStruct = FItemStruct::FItemStruct();
-		Item = AItem_A::GetEmptyItem();
-		Item->ItemStructure = EmptyItemStruct;
+		Item = AStat_Item_A::GetEmptyStatItem();
 		Color = FColor::White;
 	}
 

@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+//#include "Components/ActorComponent.h"
+#include "SimpleWheeledVehicleMovementComponent.h"
 #include "CarMovementComponent.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class RPG_RACERS_API UCarMovementComponent : public UActorComponent
+class RPG_RACERS_API UCarMovementComponent : public USimpleWheeledVehicleMovementComponent
 {
 	GENERATED_BODY()
 
@@ -19,13 +19,46 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	/*
+	UPROPERTY(EditAnywhere)
+		float Mass = 1000;
+
+
+	UPROPERTY(EditAnywhere)
+		float DragCoefficient = 16;
+	*/
+
+	UPROPERTY(EditAnywhere)
+		float MaxDrivingForce = 10000;
+
+	UPROPERTY(EditAnywhere)
+		float MinTurnRadius = 10;
+
+	UPROPERTY(EditAnywhere)
+		float MaxDegreesPerSecond = 90;
+
+	UPROPERTY(EditAnywhere)
+		float RollingCoefficient = 0.005;
+	
+	void SetThrottle(float Val) { Throttle = Val; };
+	void SetSteeringThrow(float Val) { SteeringThrow = Val; };
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-private:	
+private:
+	/*
+	FVector Velocity;
+	*/
+	float SteeringThrow;
+	float Throttle;
 
+	void SimulateMove(float);
+	FVector GetAirResistance();
+	FVector GetRollingResistance();
+	void ApplyRotation(float);
+	void UpdateLocationFromVelocity(float);
 
 };
  

@@ -2,6 +2,8 @@
 
 #include "InventoryComponent.h"
 #include "SlotStruct.h"
+#include "CarPawn.h"
+#include "PlayerStats_AC.h"
 #include "Store_A.h"
 
 // Sets default values for this component's properties
@@ -19,9 +21,8 @@ void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	// ...
-	UE_LOG(LogTemp, Warning, TEXT("Test"));
+
 	PrepareInventory();
-	
 }
 
 
@@ -45,7 +46,13 @@ void UInventoryComponent::PrepareInventory()
 	}
 }
 
-bool UInventoryComponent::CanAddToInventory(AItem_A* NewItem)
+void UInventoryComponent::AddItemToInventory(AStat_Item_A* ItemToAdd)
+{
+	if (CanAddToInventory(ItemToAdd) && !Cast<ACarPawn>(GetOwner())->isNPC)
+		AddToWindow();
+}
+
+bool UInventoryComponent::CanAddToInventory(AStat_Item_A* NewItem)
 {
 	// This for-loop will prevent the player from getting duplicate items.
 	for (int i = 0; i < NumberOfSlots; i++)
@@ -57,7 +64,7 @@ bool UInventoryComponent::CanAddToInventory(AItem_A* NewItem)
 	// This for-loop will look for an "Empty" slot in the Inventory array and place the new item
 	for (int i = 0; i < NumberOfSlots; i++)
 	{
-		auto EmptySlot = FSlotStruct::FSlotStruct();
+		auto EmptySlot = GetEmptySlot();
 
 		if (Inventory[i].Item->ItemStructure.ID == EmptySlot.Item->ItemStructure.ID)
 		{
@@ -80,12 +87,44 @@ bool UInventoryComponent::CanAddToInventory(AItem_A* NewItem)
 			}
 
 			Inventory[i] = EmptySlot;
-			AddToWindow();
+			AddStatsToPlayer(Inventory[i].Item);
 			return true;
 		}
 	}
 
 	return false;
+}
+
+void UInventoryComponent::RemoveItemFromInventory(int index)
+{
+	auto ItemSlot = Inventory[index];
+
+	if (ItemSlot.Item->ItemStructure.ID == GetEmptySlot().Item->ItemStructure.ID)
+		return;
+
+	RemoveStatsFromPlayer(ItemSlot.Item);
+	Inventory[index] = GetEmptySlot();
+	AddToWindow();
+}
+
+void UInventoryComponent::AddStatsToPlayer(AStat_Item_A* ItemToAdd)
+{
+	auto PlayerStats = Cast<ACarPawn>(GetOwner())->FindComponentByClass<UPlayerStats_AC>();
+
+	if (!PlayerStats) { return; }
+
+	PlayerStats->AttackPower += ItemToAdd->AttackPower;
+	PlayerStats->DefensiveProtections += ItemToAdd->DefensiveProtections;
+}
+
+void UInventoryComponent::RemoveStatsFromPlayer(AStat_Item_A* ItemToRemove)
+{
+	auto PlayerStats = Cast<ACarPawn>(GetOwner())->FindComponentByClass<UPlayerStats_AC>();
+
+	if (!PlayerStats) { return; }
+
+	PlayerStats->AttackPower -= ItemToRemove->AttackPower;
+	PlayerStats->DefensiveProtections -= ItemToRemove->DefensiveProtections;
 }
 
 void UInventoryComponent::AddToWindow()
