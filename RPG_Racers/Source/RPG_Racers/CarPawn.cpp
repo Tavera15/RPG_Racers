@@ -19,7 +19,7 @@ ACarPawn::ACarPawn()
 void ACarPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	if(!isNPC)
 		InventoryComponent->AddToWindow();
 	
@@ -35,7 +35,8 @@ void ACarPawn::BeginPlay()
 	for (int i = 0; i < AllCheckpoints.Num(); i++)
 		checkpoints.Add(Cast<ACheckpoint_A>(AllCheckpoints[i]));
 
-	faceDestination = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), checkpoints[CheckpointToGo]->GetActorLocation());
+	if(isNPC)
+		faceDestination = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), checkpoints[CheckpointToGo]->GetActorLocation());
 
 }
 
@@ -98,22 +99,3 @@ void ACarPawn::MoveRight(float value)
 	CarMovementComp->SetSteeringThrow(value);
 }
 
-void ACarPawn::DriveToDestination()
-{
-	if (checkpoints.Num() == 0) 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Checkpoints empty"));
-		return; 
-	}
-	
-	ACheckpoint_A* currentCheckpoint = checkpoints[CheckpointToGo];
-	
-	this->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), currentCheckpoint->GetActorLocation()));
-	this->MoveForward(1);
-
-	if (IsOverlappingActor(currentCheckpoint))
-	{
-		CarMovementComp->Velocity = FVector::ZeroVector;
-		CheckpointToGo = (CheckpointToGo + 1 == checkpoints.Num() ? 0 : CheckpointToGo += 1);
-	}
-}

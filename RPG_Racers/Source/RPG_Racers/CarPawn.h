@@ -51,8 +51,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void MoveRight(float Value);
 
-	void DriveToDestination();
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

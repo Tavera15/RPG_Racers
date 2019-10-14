@@ -18,7 +18,7 @@ void ACar_AIController::Tick(float DeltaTime)
 		return; 
 	}
 	
-	Cast<ACarPawn>(OwnerCar)->DriveToDestination();
+	//Cast<ACarPawn>(OwnerCar)->DriveToDestination();
 	//MoveToActor(Destination, AcceptableRadius);
 
 	/*

@@ -37,5 +37,7 @@ protected:
 	virtual void BeginPlay() override;
 
 private:	
-		
+	bool isDead = false;
+
+	void PlayerDead();
 };

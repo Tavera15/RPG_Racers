@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayerStats_AC.h"
+#include "GameFramework/Actor.h"
+#include "GameFramework/Controller.h"
 
 
 // Sets default values for this component's properties
@@ -38,5 +40,20 @@ void UPlayerStats_AC::ReceiveDamage(float DamageTaken)
 	HP -= DamageTaken;
 
 	if (HP <= 0)
+	{
+		PlayerDead();
 		UE_LOG(LogTemp, Warning, TEXT("Killed"));
+	}
+}
+
+void UPlayerStats_AC::PlayerDead()
+{
+	auto currentPosition = GetOwner()->GetActorLocation();
+
+	auto control = GetOwner()->GetInstigatorController();
+	
+	if (!control) { return; }
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *control->GetName())
+
 }

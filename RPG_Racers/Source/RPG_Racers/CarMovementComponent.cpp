@@ -94,6 +94,7 @@ void UCarMovementComponent::UpdateLocationFromVelocity(float DeltaTime)
 
 	if (Hit.IsValidBlockingHit())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Some"));
 		Velocity = FVector::ZeroVector;
 	}
 }
