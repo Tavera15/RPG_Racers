@@ -33,10 +33,7 @@ void ACarPawn::BeginPlay()
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckpoint_A::StaticClass(), AllCheckpoints);
 
 	for (int i = 0; i < AllCheckpoints.Num(); i++)
-		checkpoints.Add(Cast<ACheckpoint_A>(AllCheckpoints[i]));
-
-	if(isNPC)
-		faceDestination = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), checkpoints[CheckpointToGo]->GetActorLocation());
+		PlayerStats->checkpoints.Add(Cast<ACheckpoint_A>(AllCheckpoints[i]));
 
 }
 

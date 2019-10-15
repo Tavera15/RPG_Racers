@@ -50,10 +50,12 @@ void UPlayerStats_AC::PlayerDead()
 {
 	auto currentPosition = GetOwner()->GetActorLocation();
 
-	auto control = GetOwner()->GetInstigatorController();
+	//auto control = GetOwner()->GetInstigatorController();
 	
-	if (!control) { return; }
+	//if (!control) { return; }
 
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *control->GetName())
+	//GetOwner()->SetActorLocation(TemporaryRespawn->GetActorLocation());
 
+	// ToDo Will spawn at the last checkpoint when car is dead
+	HP = 100;
 }

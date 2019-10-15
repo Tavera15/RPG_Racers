@@ -1,0 +1,18 @@
+For Prototype on 10/14/19
+
+Of course, there's still a lot of tweeking that needs to be done (Collision, level design, physics, AI), but the some 
+of the core mechanics are there. 
+
+Controls:
+To Drive - 'W' 'A' 'S' 'D'
+To open Store - Press 'E'.
+To get an item from the store - Click on the slot from the Store window
+To get rid of an item from the inventory - Click on the slot from the inventory
+The player will automatically have one offensive weapon when the game is played in the Medieval Dungeon Level.
+To use offensive weapon - Press the 'Space Bar'.
+
+A "Hello" will be logged in the Unreal Log if it hits the other AI car.
+"Killed" will be logged if the AI car lost all of its Health.
+
+In the event that the Medieval Dungeon level is not loaded when the 
+project is opened up, there is a folder labeled "Levels" in the 'Content' folder.

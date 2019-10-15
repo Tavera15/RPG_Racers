@@ -56,8 +56,6 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	TArray<ACheckpoint_A*> checkpoints;
-	int CheckpointToGo = 0;
 	void OpenStore();
 	void UseWeapon();
 	FRotator faceDestination;

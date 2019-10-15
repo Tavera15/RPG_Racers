@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "OffensiveWeapon_Item_A.h"
+#include "Checkpoint_A.h"
 #include "PlayerStats_AC.generated.h"
 
 
@@ -32,12 +33,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ReceiveDamage(float DamageTaken);
 
+	UPROPERTY(EditAnywhere)
+		ACheckpoint_A* TemporaryRespawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<ACheckpoint_A*> checkpoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int CheckpointToGo = 0;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 private:	
 	bool isDead = false;
-
 	void PlayerDead();
 };
