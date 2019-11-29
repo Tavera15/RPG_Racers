@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "OffensiveWeapon_Item_A.h"
 #include "Checkpoint_A.h"
+#include "PlayerCheckpoints_A.h"
 #include "PlayerStats_AC.generated.h"
 
 
@@ -33,14 +34,26 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ReceiveDamage(float DamageTaken);
 
+	UFUNCTION(BlueprintCallable)
+		int UpdateCheckpoint(int checkpointOn);
+
 	UPROPERTY(EditAnywhere)
 		ACheckpoint_A* TemporaryRespawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<ACheckpoint_A*> checkpoints;
+		int CheckpointToGo = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int CheckpointToGo = 0;
+		APlayerCheckpoints_A* LevelCheckpoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int CurrentLap = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int CurrentPlace = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float distanceToNextCheckpoint;
 
 protected:
 	// Called when the game starts
@@ -49,4 +62,6 @@ protected:
 private:	
 	bool isDead = false;
 	void PlayerDead();
+
+	TArray<AActor*> allRacers;
 };

@@ -151,3 +151,5 @@ FSlotStruct UInventoryComponent::GetEmptySlot()
 {
 	return FSlotStruct::FSlotStruct();
 }
+
+

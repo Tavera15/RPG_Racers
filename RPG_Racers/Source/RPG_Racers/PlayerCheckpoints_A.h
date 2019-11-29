@@ -4,32 +4,36 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Checkpoint_A.generated.h"
+#include "Checkpoint_A.h"
+#include "PlayerCheckpoints_A.generated.h"
 
 UCLASS()
-class RPG_RACERS_API ACheckpoint_A : public AActor
+class RPG_RACERS_API APlayerCheckpoints_A : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ACheckpoint_A();
+	APlayerCheckpoints_A();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float AcceptanceRadius = 1000;
+		TArray<ACheckpoint_A*> LevelCheckpoints;
 
-	UPROPERTY(BlueprintReadOnly)
-		int Index;
+	void RacePlacement();
+	void CalculateDistances();
 
-	float getDistanceFromRacer(FVector RacerPos);
+	TArray<AActor*> allRacers;
+
+	float GetDistanceToCheckpoint(AActor* Racer);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
-
+	int heighestCheckpointIndex = -1;
+	int heighestLap = -1;
 };

@@ -29,11 +29,6 @@ void ACarPawn::BeginPlay()
 	if(AllStores.Num() > 0)
 		TheStore = Cast<AStore_A>(AllStores[0]);
 
-	TArray<AActor*> AllCheckpoints;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckpoint_A::StaticClass(), AllCheckpoints);
-
-	for (int i = 0; i < AllCheckpoints.Num(); i++)
-		PlayerStats->checkpoints.Add(Cast<ACheckpoint_A>(AllCheckpoints[i]));
 
 }
 

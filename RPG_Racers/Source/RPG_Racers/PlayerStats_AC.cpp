@@ -2,6 +2,8 @@
 
 #include "PlayerStats_AC.h"
 #include "GameFramework/Actor.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/Controller.h"
 
 
@@ -20,9 +22,14 @@ UPlayerStats_AC::UPlayerStats_AC()
 void UPlayerStats_AC::BeginPlay()
 {
 	Super::BeginPlay();
-
 	// ...
+
+
+	TArray<AActor*> allPlayerCheckpoints;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerCheckpoints_A::StaticClass(), allPlayerCheckpoints);
 	
+	if(allPlayerCheckpoints.Num() > 0)
+		LevelCheckpoints = Cast<APlayerCheckpoints_A>(allPlayerCheckpoints[0]);
 }
 
 
@@ -46,6 +53,28 @@ void UPlayerStats_AC::ReceiveDamage(float DamageTaken)
 	}
 }
 
+int UPlayerStats_AC::UpdateCheckpoint(int checkpointOn)
+{
+	if (checkpointOn != CheckpointToGo)
+	{
+		return CheckpointToGo;
+	}
+
+	if (CheckpointToGo + 1 == LevelCheckpoints->LevelCheckpoints.Num())
+	{
+		CheckpointToGo = 0;
+		CurrentLap++;
+	}
+	else
+	{
+		CheckpointToGo++;
+	}
+
+	TemporaryRespawn = LevelCheckpoints->LevelCheckpoints[CheckpointToGo];
+
+	return CheckpointToGo;
+}
+
 void UPlayerStats_AC::PlayerDead()
 {
 	auto currentPosition = GetOwner()->GetActorLocation();
@@ -58,4 +87,6 @@ void UPlayerStats_AC::PlayerDead()
 
 	// ToDo Will spawn at the last checkpoint when car is dead
 	HP = 100;
+
 }
+
