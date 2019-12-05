@@ -10,6 +10,7 @@
 #include "CarMovementComponent.h"
 #include "Checkpoint_A.h"
 #include "Store_A.h"
+#include "Blueprint/UserWidget.h"
 #include "CarPawn.generated.h"
 
 UCLASS()
@@ -43,6 +44,12 @@ public:
 		UCarMovementComponent* CarMovementComp = nullptr;
 
 	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> PlayerStatsUIClass;
+
+	UPROPERTY(BlueprintReadOnly)
+		UUserWidget* PlayerStatsUI;
+
+	UPROPERTY(EditAnywhere)
 		bool isNPC = false;
 
 	UFUNCTION(BlueprintCallable)
@@ -51,12 +58,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void MoveRight(float Value);
 
+	UFUNCTION(BlueprintCallable)
+		void OpenStore();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
-	void OpenStore();
+	void OpenRacerStats();
 	void UseWeapon();
 	FRotator faceDestination;
 };

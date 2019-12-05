@@ -40,6 +40,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		float RollingCoefficient = 0.005;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool canMove = false;
+
 	void SetThrottle(float Val) { Throttle = Val; };
 	void SetSteeringThrow(float Val) { SteeringThrow = Val; };
 

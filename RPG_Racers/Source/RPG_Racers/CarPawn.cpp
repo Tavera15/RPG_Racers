@@ -20,6 +20,15 @@ void ACarPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetWorld()->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *GetWorld()->GetMapName());
+
+	if (GetWorld()->GetName() == "MainMenu")
+	{
+		Destroy();
+		return;
+	}
+
 	if(!isNPC)
 		InventoryComponent->AddToWindow();
 	
@@ -28,8 +37,6 @@ void ACarPawn::BeginPlay()
 
 	if(AllStores.Num() > 0)
 		TheStore = Cast<AStore_A>(AllStores[0]);
-
-
 }
 
 // Called every frame
@@ -44,7 +51,7 @@ void ACarPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACarPawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACarPawn::MoveRight);
-	PlayerInputComponent->BindAction("OpenStore", IE_Pressed, this, &ACarPawn::OpenStore);
+	PlayerInputComponent->BindAction("OpenStore", IE_Pressed, this, &ACarPawn::OpenRacerStats);
 	PlayerInputComponent->BindAction("UseWeapon", IE_Pressed, this, &ACarPawn::UseWeapon);
 }
 
@@ -69,6 +76,26 @@ void ACarPawn::OpenStore()
 	MyPlayerController->bShowMouseCursor = true;
 	MyPlayerController->SetInputMode(FInputModeGameAndUI::FInputModeGameAndUI());
 }
+
+void ACarPawn::OpenRacerStats()
+{
+	if (!PlayerStatsUIClass) { return; }
+
+	if (PlayerStatsUI && PlayerStatsUI->IsInViewport())
+	{
+		PlayerStatsUI->RemoveFromViewport();
+		return;
+	}
+
+	PlayerStatsUI = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), PlayerStatsUIClass);
+
+	if (!PlayerStatsUI) { return; }
+
+	PlayerStatsUI->AddToViewport();
+
+}
+
+
 
 void ACarPawn::UseWeapon()
 {

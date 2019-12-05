@@ -34,6 +34,7 @@ void APlayerCheckpoints_A::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
 	RacePlacement();
 }
 
@@ -57,7 +58,7 @@ void APlayerCheckpoints_A::RacePlacement()
 		heighestCheckpointIndex = 0;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Heighest Lap: %d"), heighestLap);
+	//UE_LOG(LogTemp, Warning, TEXT("Heighest Lap: %d"), heighestLap);
 
 	// Find the heighest lap
 	for (int i = 0; i < allRacers.Num(); i++)
@@ -72,7 +73,7 @@ void APlayerCheckpoints_A::RacePlacement()
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Heighest CP: %d"), heighestCheckpointIndex);
+	//UE_LOG(LogTemp, Warning, TEXT("Heighest CP: %d"), heighestCheckpointIndex);
 	CalculateDistances();
 }
 
@@ -135,7 +136,7 @@ float APlayerCheckpoints_A::GetDistanceToCheckpoint(AActor* racer)
 		racerCPToGo++;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Racer CP to go: %d"), racerCPToGo);
+	//UE_LOG(LogTemp, Warning, TEXT("Racer CP to go: %d"), racerCPToGo);
 
 	distance += destination->getDistanceFromRacer(racer->GetActorLocation());
 

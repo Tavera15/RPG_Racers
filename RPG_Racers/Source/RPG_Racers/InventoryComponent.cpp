@@ -48,6 +48,9 @@ void UInventoryComponent::PrepareInventory()
 
 void UInventoryComponent::AddItemToInventory(AStat_Item_A* ItemToAdd)
 {
+	if (!canAccessInventory)
+		return;
+
 	if (CanAddToInventory(ItemToAdd) && !Cast<ACarPawn>(GetOwner())->isNPC)
 		AddToWindow();
 }
@@ -97,6 +100,9 @@ bool UInventoryComponent::CanAddToInventory(AStat_Item_A* NewItem)
 
 void UInventoryComponent::RemoveItemFromInventory(int index)
 {
+	if (!canAccessInventory)
+		return;
+
 	auto ItemSlot = Inventory[index];
 
 	if (ItemSlot.Item->ItemStructure.ID == GetEmptySlot().Item->ItemStructure.ID)
@@ -139,10 +145,6 @@ void UInventoryComponent::AddToWindow()
 	InventoryWindow = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), InventoryWindowClass);
 
 	if (!InventoryWindow) { return; }
-
-	InventoryWindow->SetAlignmentInViewport(FVector2D(.5, .5));
-	InventoryWindow->SetPositionInViewport(WindowPosition);
-	InventoryWindow->SetAnchorsInViewport(FAnchors(.5, .5, .5, .5));
 
 	InventoryWindow->AddToViewport();
 }

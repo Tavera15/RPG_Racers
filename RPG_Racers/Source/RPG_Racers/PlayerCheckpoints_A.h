@@ -22,6 +22,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<ACheckpoint_A*> LevelCheckpoints;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool canRace = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float timeToStart = 30.0f;
+
 	void RacePlacement();
 	void CalculateDistances();
 

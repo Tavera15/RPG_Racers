@@ -31,18 +31,10 @@ void UCarMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!canMove)
+		return;
+
 	SimulateMove(DeltaTime);
-
-
-	auto GetCarAI = Cast<ACarPawn>(GetOwner());
-
-	if (GetCarAI->isNPC)
-	{
-		
-		//GetCarAI->movet;
-		//SetSteeringThrow(1);
-		//SetThrottle(1);
-	}
 }
 
 void UCarMovementComponent::SimulateMove(float DeltaTime)

@@ -28,7 +28,7 @@ public:
 		FString InventoryName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		int NumberOfSlots;
+		int NumberOfSlots = 2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<FSlotStruct> Inventory;
@@ -53,6 +53,9 @@ public:
 		void RemoveItemFromInventory(int index);
 
 	void AddToWindow();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool canAccessInventory = true;
 
 protected:
 	// Called when the game starts
