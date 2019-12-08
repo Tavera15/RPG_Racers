@@ -34,7 +34,6 @@ void APlayerCheckpoints_A::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
 	RacePlacement();
 }
 

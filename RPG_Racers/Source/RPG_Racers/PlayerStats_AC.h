@@ -31,6 +31,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float DefensiveProtections = 10.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float DrivingSpeed = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float StartingMaxDrivingForce = 10000;
+
 	UFUNCTION(BlueprintCallable)
 		void ReceiveDamage(float DamageTaken);
 
@@ -54,6 +60,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float distanceToNextCheckpoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool isImmune = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		bool isNPC = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool canMove = true;
 
 protected:
 	// Called when the game starts

@@ -7,6 +7,7 @@
 #include "Item_A.h"
 #include "Blueprint/UserWidget.h"
 #include "SlotStruct.h"
+#include "PlayerStats_AC.h"
 #include "InventoryComponent.generated.h"
 
 
@@ -47,7 +48,7 @@ public:
 	// --------Functions that can be called in blueprints to add to or remove from inventory
 
 	UFUNCTION(BlueprintCallable)
-		void AddItemToInventory(AStat_Item_A* ItemToAdd);
+		void AddItemToInventory(AStat_Item_A* ItemToAdd, UPlayerStats_AC* RacerStats);
 
 	UFUNCTION(BlueprintCallable)
 		void RemoveItemFromInventory(int index);
@@ -66,7 +67,7 @@ private:
 	// Initialize the inventory with "Empty" Slots and keep any items that were placed before hitting play.
 	void PrepareInventory();
 	void RemoveStatsFromPlayer(AStat_Item_A*);
-	void AddStatsToPlayer(AStat_Item_A*);
-	bool CanAddToInventory(AStat_Item_A* NewItem);
+	void AddStatsToPlayer(AStat_Item_A*, UPlayerStats_AC*);
+	bool CanAddToInventory(AStat_Item_A* NewItem, UPlayerStats_AC* RacerStats);
 	FSlotStruct GetEmptySlot();
 };

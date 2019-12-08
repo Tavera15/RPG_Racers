@@ -46,16 +46,16 @@ void UInventoryComponent::PrepareInventory()
 	}
 }
 
-void UInventoryComponent::AddItemToInventory(AStat_Item_A* ItemToAdd)
+void UInventoryComponent::AddItemToInventory(AStat_Item_A* ItemToAdd, UPlayerStats_AC* RacerStats)
 {
 	if (!canAccessInventory)
 		return;
 
-	if (CanAddToInventory(ItemToAdd) && !Cast<ACarPawn>(GetOwner())->isNPC)
+	if (CanAddToInventory(ItemToAdd, RacerStats) && !RacerStats->isNPC)
 		AddToWindow();
 }
 
-bool UInventoryComponent::CanAddToInventory(AStat_Item_A* NewItem)
+bool UInventoryComponent::CanAddToInventory(AStat_Item_A* NewItem, UPlayerStats_AC* RacerStats)
 {
 	// This for-loop will prevent the player from getting duplicate items.
 	for (int i = 0; i < NumberOfSlots; i++)
@@ -90,7 +90,7 @@ bool UInventoryComponent::CanAddToInventory(AStat_Item_A* NewItem)
 			}
 
 			Inventory[i] = EmptySlot;
-			AddStatsToPlayer(Inventory[i].Item);
+			AddStatsToPlayer(Inventory[i].Item, RacerStats);
 			return true;
 		}
 	}
@@ -113,14 +113,13 @@ void UInventoryComponent::RemoveItemFromInventory(int index)
 	AddToWindow();
 }
 
-void UInventoryComponent::AddStatsToPlayer(AStat_Item_A* ItemToAdd)
+void UInventoryComponent::AddStatsToPlayer(AStat_Item_A* ItemToAdd, UPlayerStats_AC* RacerStats)
 {
-	auto PlayerStats = Cast<ACarPawn>(GetOwner())->FindComponentByClass<UPlayerStats_AC>();
+	if (!RacerStats) { return; }
 
-	if (!PlayerStats) { return; }
-
-	PlayerStats->AttackPower += ItemToAdd->AttackPower;
-	PlayerStats->DefensiveProtections += ItemToAdd->DefensiveProtections;
+	RacerStats->AttackPower += ItemToAdd->AttackPower;
+	RacerStats->DefensiveProtections += ItemToAdd->DefensiveProtections;
+	RacerStats->DrivingSpeed += ItemToAdd->DrivingSpeed;
 }
 
 void UInventoryComponent::RemoveStatsFromPlayer(AStat_Item_A* ItemToRemove)
@@ -131,6 +130,7 @@ void UInventoryComponent::RemoveStatsFromPlayer(AStat_Item_A* ItemToRemove)
 
 	PlayerStats->AttackPower -= ItemToRemove->AttackPower;
 	PlayerStats->DefensiveProtections -= ItemToRemove->DefensiveProtections;
+	PlayerStats->DrivingSpeed -= ItemToRemove->DrivingSpeed;
 }
 
 void UInventoryComponent::AddToWindow()

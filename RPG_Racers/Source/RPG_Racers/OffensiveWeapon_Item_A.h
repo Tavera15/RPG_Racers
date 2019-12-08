@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		AttackType OffWeaponType = AttackType::None;
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void ActivateWeapon(UPlayerStats_AC* PlayerStats);
 
 	UFUNCTION(BlueprintCallable)

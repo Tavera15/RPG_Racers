@@ -24,12 +24,14 @@ void UPlayerStats_AC::BeginPlay()
 	Super::BeginPlay();
 	// ...
 
+	isImmune = false;
 
 	TArray<AActor*> allPlayerCheckpoints;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerCheckpoints_A::StaticClass(), allPlayerCheckpoints);
 	
 	if(allPlayerCheckpoints.Num() > 0)
 		LevelCheckpoints = Cast<APlayerCheckpoints_A>(allPlayerCheckpoints[0]);
+
 }
 
 
@@ -43,6 +45,8 @@ void UPlayerStats_AC::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UPlayerStats_AC::ReceiveDamage(float DamageTaken)
 {
+	if (isImmune) { return; }
+
 	DamageTaken -= DefensiveProtections;
 	HP -= DamageTaken;
 

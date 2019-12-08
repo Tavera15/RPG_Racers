@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float DefensiveProtections = 0.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		float DrivingSpeed = 1.0f;
+
 	static AStat_Item_A* GetEmptyStatItem();
 
 private:

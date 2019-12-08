@@ -95,8 +95,6 @@ void ACarPawn::OpenRacerStats()
 
 }
 
-
-
 void ACarPawn::UseWeapon()
 {
 	if (!OffensiveWeapon) { return; }

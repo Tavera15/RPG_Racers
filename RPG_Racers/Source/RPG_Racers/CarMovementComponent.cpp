@@ -30,16 +30,19 @@ void UCarMovementComponent::BeginPlay()
 void UCarMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (!canMove)
-		return;
-
-	SimulateMove(DeltaTime);
+	
+	if (GetOwner()->FindComponentByClass<UPlayerStats_AC>()->LevelCheckpoints->canRace &&
+		GetOwner()->FindComponentByClass<UPlayerStats_AC>()->canMove)
+	{
+		SimulateMove(DeltaTime);
+	}
 }
 
 void UCarMovementComponent::SimulateMove(float DeltaTime)
 {
-	FVector Force = GetOwner()->GetActorForwardVector() * MaxDrivingForce * Throttle;
+	FVector regularForce = GetOwner()->GetActorForwardVector() * MaxDrivingForce * Throttle;
+
+	FVector Force = regularForce + (regularForce * (GetOwner()->FindComponentByClass<UPlayerStats_AC>()->DrivingSpeed / 100));
 
 	Force += GetAirResistance();
 	Force += GetRollingResistance();

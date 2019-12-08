@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 //#include "Components/ActorComponent.h"
 #include "SimpleWheeledVehicleMovementComponent.h"
+#include "PlayerStats_AC.h"
 #include "CarMovementComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -28,8 +29,11 @@ public:
 		float DragCoefficient = 16;
 	*/
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float MaxDrivingForce = 10000;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float StartingMaxDrivingForce = 10000;
 
 	UPROPERTY(EditAnywhere)
 		float MinTurnRadius = 10;
@@ -39,9 +43,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		float RollingCoefficient = 0.005;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool canMove = false;
+
 
 	void SetThrottle(float Val) { Throttle = Val; };
 	void SetSteeringThrow(float Val) { SteeringThrow = Val; };
