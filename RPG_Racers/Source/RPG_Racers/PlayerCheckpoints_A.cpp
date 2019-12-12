@@ -25,8 +25,7 @@ void APlayerCheckpoints_A::BeginPlay()
 
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "Racer", allRacers);
 
-	
-	//UE_LOG(LogTemp, Warning, TEXT("Racers: %d"), LevelCheckpoints.Num());
+	// Set winner to null
 }
 
 // Called every frame
@@ -34,7 +33,32 @@ void APlayerCheckpoints_A::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	RacePlacement();
+	if (!winner)
+	{
+		RacePlacement();
+		CheckWinner();
+	}
+	else
+	{
+		canRace = false;
+		UE_LOG(LogTemp, Warning, TEXT("Winner: %s"), *winner->GetName());
+	}
+}
+
+void APlayerCheckpoints_A::CheckWinner()
+{
+	if (!canRace) { return; }
+
+	for (int i = 0; i < allRacers.Num(); i++)
+	{
+		auto currentRacerStats = allRacers[i]->FindComponentByClass<UPlayerStats_AC>();
+		if (currentRacerStats->CurrentLap == lapsToComplete)
+		{
+			winner = allRacers[i];
+			canRace = false;
+			return;
+		}
+	}
 }
 
 void APlayerCheckpoints_A::RacePlacement()

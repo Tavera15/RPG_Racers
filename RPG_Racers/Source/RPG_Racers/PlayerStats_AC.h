@@ -22,6 +22,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float HP = 100.0f;
 
@@ -38,10 +39,13 @@ public:
 		float StartingMaxDrivingForce = 10000;
 
 	UFUNCTION(BlueprintCallable)
-		void ReceiveDamage(float DamageTaken);
+		bool ReceiveDamage(float DamageTaken);
 
 	UFUNCTION(BlueprintCallable)
 		int UpdateCheckpoint(int checkpointOn);
+
+	UFUNCTION(BlueprintCallable)
+		void Respawn();
 
 	UPROPERTY(EditAnywhere)
 		ACheckpoint_A* TemporaryRespawn;
@@ -69,13 +73,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool canMove = true;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		bool isDead = false;
+
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 private:	
-	bool isDead = false;
 	void PlayerDead();
 
 	TArray<AActor*> allRacers;

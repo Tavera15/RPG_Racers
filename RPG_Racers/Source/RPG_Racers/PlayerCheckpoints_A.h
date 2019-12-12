@@ -28,12 +28,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float timeToStart = 30.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int lapsToComplete = 3;
+
 	void RacePlacement();
 	void CalculateDistances();
 
 	TArray<AActor*> allRacers;
 
 	float GetDistanceToCheckpoint(AActor* Racer);
+
+	void CheckWinner();
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,4 +47,6 @@ protected:
 private:
 	int heighestCheckpointIndex = -1;
 	int heighestLap = -1;
+
+	AActor* winner = nullptr;
 };

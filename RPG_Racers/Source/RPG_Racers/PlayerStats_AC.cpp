@@ -32,6 +32,7 @@ void UPlayerStats_AC::BeginPlay()
 	if(allPlayerCheckpoints.Num() > 0)
 		LevelCheckpoints = Cast<APlayerCheckpoints_A>(allPlayerCheckpoints[0]);
 
+	UE_LOG(LogTemp, Warning, TEXT("test"));
 }
 
 
@@ -43,18 +44,26 @@ void UPlayerStats_AC::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
-void UPlayerStats_AC::ReceiveDamage(float DamageTaken)
+bool UPlayerStats_AC::ReceiveDamage(float DamageTaken)
 {
-	if (isImmune) { return; }
+	bool isRacerDead = false;
+
+	if (isImmune) { return isRacerDead; }
 
 	DamageTaken -= DefensiveProtections;
+
+	if (DamageTaken < 0)
+		DamageTaken = 5;
+
 	HP -= DamageTaken;
 
 	if (HP <= 0)
 	{
 		PlayerDead();
-		UE_LOG(LogTemp, Warning, TEXT("Killed"));
+		isRacerDead = true;
 	}
+
+	return isRacerDead;
 }
 
 int UPlayerStats_AC::UpdateCheckpoint(int checkpointOn)
@@ -81,16 +90,16 @@ int UPlayerStats_AC::UpdateCheckpoint(int checkpointOn)
 
 void UPlayerStats_AC::PlayerDead()
 {
-	auto currentPosition = GetOwner()->GetActorLocation();
-
-	//auto control = GetOwner()->GetInstigatorController();
-	
-	//if (!control) { return; }
-
-	//GetOwner()->SetActorLocation(TemporaryRespawn->GetActorLocation());
-
-	// ToDo Will spawn at the last checkpoint when car is dead
-	HP = 100;
-
+	isDead = true;
+	canMove = false;
 }
 
+
+void UPlayerStats_AC::Respawn()
+{
+	int indexToSpawn = (CheckpointToGo - 2 < 0 ? LevelCheckpoints->LevelCheckpoints.Num() - 1 : CheckpointToGo - 2);
+	GetOwner()->SetActorLocation(LevelCheckpoints->LevelCheckpoints[indexToSpawn]->GetActorLocation());
+	HP = 100;
+	isDead = false;
+	canMove = true;
+}

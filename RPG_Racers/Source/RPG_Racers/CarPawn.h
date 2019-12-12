@@ -49,9 +49,6 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		UUserWidget* PlayerStatsUI;
 
-	UPROPERTY(EditAnywhere)
-		bool isNPC = false;
-
 	UFUNCTION(BlueprintCallable)
 		void MoveForward(float Value);
 

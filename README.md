@@ -9,3 +9,4 @@
 * Added to the level design of Dungeon, implemented race placement system
 * Remodeled HUDs, added main menu, and race time start
 * Added four new Offensive Weapons
+* Weapons Box added, map modified slightly

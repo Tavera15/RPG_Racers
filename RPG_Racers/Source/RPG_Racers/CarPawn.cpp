@@ -29,8 +29,7 @@ void ACarPawn::BeginPlay()
 		return;
 	}
 
-	if(!isNPC)
-		InventoryComponent->AddToWindow();
+	InventoryComponent->AddToWindow();
 	
 	TArray<AActor*> AllStores;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStore_A::StaticClass(), AllStores);
@@ -57,7 +56,7 @@ void ACarPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ACarPawn::OpenStore()
 {
-	if (isNPC || !TheStore) { return; }
+	if (!TheStore) { return; }
 
 	auto StoreInvComp = TheStore->FindComponentByClass<UInventoryComponent>();
 	auto MyPlayerController = Cast<APlayerController>(GetController());
@@ -100,6 +99,7 @@ void ACarPawn::UseWeapon()
 	if (!OffensiveWeapon) { return; }
 
 	OffensiveWeapon->ActivateWeapon(PlayerStats);
+	OffensiveWeapon = nullptr;
 }
 
 void ACarPawn::MoveForward(float value)
