@@ -24,7 +24,7 @@ void APlayerCheckpoints_A::BeginPlay()
 	}
 
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "Racer", allRacers);
-
+	isWinnerFound = false;
 	// Set winner to null
 }
 
@@ -41,7 +41,8 @@ void APlayerCheckpoints_A::Tick(float DeltaTime)
 	else
 	{
 		canRace = false;
-		UE_LOG(LogTemp, Warning, TEXT("Winner: %s"), *winner->GetName());
+		isWinnerFound = true;
+		//UE_LOG(LogTemp, Warning, TEXT("Winner: %s"), *winner->GetName());
 	}
 }
 

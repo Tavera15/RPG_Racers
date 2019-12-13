@@ -51,7 +51,10 @@ void UInventoryComponent::AddItemToInventory(AStat_Item_A* ItemToAdd, UPlayerSta
 	if (!canAccessInventory)
 		return;
 
-	if (CanAddToInventory(ItemToAdd, RacerStats) && !RacerStats->isNPC)
+	if (CanAddToInventory(ItemToAdd, RacerStats))
+		AddStatsToPlayer(ItemToAdd, RacerStats);
+
+	if (!RacerStats->isNPC)
 		AddToWindow();
 }
 

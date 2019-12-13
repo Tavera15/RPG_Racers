@@ -25,11 +25,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool canRace = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		bool isWinnerFound = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float timeToStart = 30.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int lapsToComplete = 3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		AActor* winner = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int heighestLap = -1;
 
 	void RacePlacement();
 	void CalculateDistances();
@@ -46,7 +55,5 @@ protected:
 
 private:
 	int heighestCheckpointIndex = -1;
-	int heighestLap = -1;
 
-	AActor* winner = nullptr;
 };
